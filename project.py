@@ -106,9 +106,8 @@ def draw_result(
     for cx, cy in pip_centers:
         cv2.circle(image, (cx, cy), int(settings.pip_radius_est * 1.3), (0, 0, 255), 2)
 
-    for idx, cnt in enumerate(valid_contours, start=1):
+    for cnt in valid_contours:
         cv2.drawContours(image, [cnt], -1, (0, 255, 0), 2)
-        x, y, bw, bh = cv2.boundingRect(cnt)
 
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(
@@ -144,20 +143,8 @@ def analyze_and_save_dice(path: Path, settings: Settings) -> Output:
     pip_mask = create_pip_mask(gray, dice_mask, settings)
     total_pips, pip_centers = count_pips_via_distance_transform(pip_mask, settings)
 
-    # die_label_map = np.zeros((height, width), dtype=np.int32)
-    # for idx, cnt in enumerate(valid_contours, start=1):
-    #     cv2.drawContours(die_label_map, [cnt], -1, idx, -1)
-
-    # die_pips: dict[int, int] = {}
-    # for cx, cy in pip_centers:
-    #     if 0 <= cy < height and 0 <= cx < width:
-    #         die_id = die_label_map[cy, cx]
-    #         if die_id > 0:
-    #             die_pips[int(die_id)] = die_pips.get(die_id, 0) + 1
-
     draw_result(
         image, pip_centers, valid_contours, total_pips, height, num_dice, path, settings
     )
 
     return Output(num_dice, total_pips)
-    # return die_pips

@@ -1,12 +1,10 @@
+import os
 from pathlib import Path
-from pprint import pp
 
 from tqdm import tqdm
 
-import project
-import os
-from project import analyze_and_save_dice
 import rename
+from project import analyze_and_save_dice
 from settings import Settings
 
 
