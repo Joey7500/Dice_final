@@ -1,23 +1,30 @@
+from pathlib import Path
+from pprint import pp
+
+from tqdm import tqdm
+
 import project
 import os
-# ── BATCH PROCESSING ────────────────────────────────────────────────────────
-input_folder  = "photos"
-output_folder = "classified_good"
+from project import analyze_and_save_dice
+import rename
+from settings import Settings
 
-os.makedirs(output_folder, exist_ok=True)
-print("Starting batch processing...")
-
-for i in range(1, 101):
-    filename = f"{i}.jpg"
-    in_path  = os.path.join(input_folder, filename)
-    out_path = os.path.join(output_folder, filename)
-    if os.path.exists(in_path):
-        analyze_and_save_dice(in_path, out_path)
-
-print("Done!")
 
 def main():
-    print("Hello from pyproj!")
+    settings = Settings.from_file(Path("settings.toml"))
+
+    photos = rename.rename(settings.photos, "png")
+    os.makedirs(settings.output, exist_ok=True)
+
+    iterator = tqdm(photos, total=len(photos), desc="Processing photos")
+    for item in iterator:
+        output = analyze_and_save_dice(
+            item,
+            settings,
+        )
+        iterator.set_postfix(
+            {"Number of dices": output.num_dice, "Number of pips": output.num_pips}
+        )
 
 
 if __name__ == "__main__":

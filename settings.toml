@@ -1,0 +1,13 @@
+scale_percent = 25
+min_die_area = 1000
+expected_die_area = 2500
+adaptive_block = 27
+adaptive_c = 15
+min_pip_blob_area = 40
+max_pip_blob_area = 800
+expected_pip_area = 154
+pip_radius_est = 6
+dist_thresh_abs_multiplier = 0.6
+
+photos = "photos"
+output = "output"
