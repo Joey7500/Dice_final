@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -15,6 +16,8 @@ def main():
     os.makedirs(settings.output, exist_ok=True)
 
     iterator = tqdm(photos, total=len(photos), desc="Processing photos")
+    detected = {}
+    index = 0
     for item in iterator:
         output = analyze_and_save_dice(
             item,
@@ -23,6 +26,14 @@ def main():
         iterator.set_postfix(
             {"Number of dices": output.num_dice, "Number of pips": output.num_pips}
         )
+        detected[index] = {
+            "number of dice": output.num_dice,
+            "number of pips": output.num_pips,
+        }
+        index += 1
+
+    with open(settings.output.joinpath("results.json"), "w+") as file:
+        json.dump(detected, file)
 
 
 if __name__ == "__main__":
